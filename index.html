@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>opheliagame - p5.js sketches</title>
+
+    <link rel="stylesheet" href="normalize.css" />
+    <link rel="stylesheet" href="colors.css" />
+    <link rel="stylesheet" href="main.css" />
+
+    <script src="js/darkmode.js"></script>
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="./">
+          <h1>opheliagame's p5.js sketches</h1>
+        </a>
+
+        <!-- list of sketches -->
+
+        <ul class="nav">
+          <a>
+            <li data-title="241026_mushi_dance">mushi dance</li>
+          </a>
+
+          <a>
+            <li data-title="250803_tiny_people">tiny people</li>
+          </a>
+
+          <a>
+            <li data-title="241019_curry_palindrome">
+              curry palindrome live performance animation
+            </li>
+          </a>
+
+          <a>
+            <li data-title="250509_zining_riso">riso image</li>
+          </a>
+
+          <a>
+            <li data-title="240911_stop_motion_text">stop motion text</li>
+          </a>
+
+          <a>
+            <li data-title="241006_zine_queer_families">
+              queering families zine, single page
+            </li>
+          </a>
+
+          <a>
+            <li data-title="250502_live_stream_video_test">
+              live stream video test
+            </li>
+          </a>
+
+          <a>
+            <li data-title="241123_making_with_joy">making with joy</li>
+          </a>
+
+          <a>
+            <li data-title="250305_yolo_onnx_object_detection">
+              yolo onnx object detection
+            </li>
+          </a>
+
+          <a>
+            <li data-title="250225_media_pipe_object_detection">
+              mediapipe object detection
+            </li>
+          </a>
+
+          <a>
+            <li data-title="250304_yolo_onnx_object_segmentation">
+              yolo onnx object segmentation
+            </li>
+          </a>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- show output of each example -->
+
+      <iframe
+        id="sketch-iframe"
+        src="./sketches/241026_mushi_dance/index.html"
+        frameborder="0"
+      ></iframe>
+    </main>
+
+    <script>
+      function onClickExampleNavItem(event) {
+        const sketchIframe = document.querySelector("#sketch-iframe");
+        const item = event.target;
+
+        const title = item.dataset.title;
+        const sketchPath = `./sketches/${title}/index.html`;
+        sketchIframe.src = sketchPath;
+      }
+
+      const nav = document.querySelector(".nav").children;
+      for (let i = 0; i < nav.length; i++) {
+        const item = nav[i];
+        item.onclick = onClickExampleNavItem;
+
+        // const title = item.dataset.title
+        // const sketchPath = `/sketches/${title}.html`
+        // sketchIframe.src = sketchPath
+      }
+    </script>
+  </body>
+</html>

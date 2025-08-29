@@ -1,0 +1,1 @@
+let fonts = ["Zhi Mang Xing", "Poppins", "Caveat", "Jacquard 12", "Pacifico", "Playball", "Ga Maamli", "Mansalva", "Katibeh"]

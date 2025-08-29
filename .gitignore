@@ -1,0 +1,5 @@
+.DS_Store
+
+sketches/250304_yolo_onnx_object_segmentation/models/yolov8m-seg.onnx
+
+sketches/250305_yolo_onnx_object_detection/models/yolov4.onnx
