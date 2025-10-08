@@ -163,6 +163,11 @@ let wadoColorPalettes = [
   ],
 ];
 
+window.takawoColorPalettes = takawoColorPalettes;
+window.brightColorpalettes = brightColorpalettes;
+window.cohesiveColorPalettes = cohesiveColorPalettes;
+window.wadoColorPalettes = wadoColorPalettes;
+
 
 // https://github.com/processing/p5.js/issues/3610
 // https://editor.p5js.org/davepagurek/sketches/D_ehdpTjO
@@ -256,11 +261,10 @@ class Grid {
     let row_idx = Math.floor(particle.pos.y / this.cellSize);
 
     // TODO check
-    if(this.cells[col_idx][row_idx]) {
+    if (this.cells[col_idx][row_idx]) {
       this.cells[col_idx][row_idx].push(particle);
       particle.gridCell = { col: col_idx, row: row_idx };
     }
-    
   }
 
   removeParticle(particle) {
@@ -309,17 +313,16 @@ class Node {
 
     this.x = parent ? this.getX(parent.x) : plantX;
     this.y = parent ? this.getY(parent.y) : plantY;
-    this.pos = createVector(this.x, this.y)
-    this.radius = this.size*1.4
+    this.pos = createVector(this.x, this.y);
+    this.radius = this.size * 1.4;
     this.plantY = plantY;
     this.plantX = plantX;
 
     this.g = parentG + random(-25, 25);
     this.g = constrain(this.g, 128, 255);
-    
-    nodeCount += 1
-  }
 
+    nodeCount += 1;
+  }
 
   getX(parentX) {
     return (
@@ -338,7 +341,7 @@ class Node {
   }
 
   grow() {
-    const childAngle = this.angle + random(-PI , PI );
+    const childAngle = this.angle + random(-PI, PI);
     const child = new Node(
       this,
       this.size,
@@ -347,18 +350,17 @@ class Node {
       this.plantX,
       this.plantY
     );
-    
+
     if (child.size < 10) {
       return false;
     }
-    
-    if(child.boundaryCheck() == false) {
-      return false
+
+    if (child.boundaryCheck() == false) {
+      return false;
     }
 
-    
-    let neighbors = grid.getNeighbors(this)
-    console.log(neighbors)
+    let neighbors = grid.getNeighbors(this);
+    console.log(neighbors);
     for (let neighbor of neighbors) {
       if (neighbor.intersects(child.x, child.y, child.size)) {
         return false;
@@ -367,9 +369,8 @@ class Node {
 
     // console.log("children")
     this.children.push(child);
-    grid.addParticle(child)
-    
-    
+    grid.addParticle(child);
+
     return true;
   }
 
@@ -383,11 +384,9 @@ class Node {
       }
     }
   }
-  
+
   boundaryCheck() {
-    return !(
-      this.x < 0 || this.x > width || this.y < 0 || this.y > height
-    )
+    return !(this.x < 0 || this.x > width || this.y < 0 || this.y > height);
   }
 
   prune() {
@@ -415,14 +414,12 @@ class Node {
   }
 
   intersects(otherNodeX, otherNodeY, otherNodeSize) {
-   
     if (
       dist(this.x, this.y, otherNodeX, otherNodeY) <
-        this.size / 2 + otherNodeSize / 2 + nodeBorder
+      this.size / 2 + otherNodeSize / 2 + nodeBorder
     ) {
       return true;
     }
-
 
     return false;
   }
@@ -490,6 +487,9 @@ class Node {
   }
 }
 
+window.Grid = Grid;
+window.GridNode = Node;
+
 
 /* 
   y: a continuous value between 0 and 1
@@ -501,87 +501,101 @@ function step(y, s) {
   return Math.round(y / s) * s;
 }
 
+window.step = step;
 
-function getRandomValues(n, vmin, vmax, sorted=false) {
-  let values = []
-  for(let i = 0; i < n; i++) {
-    values.push(random() * (vmax-vmin) + vmin)
+
+function getRandomValues(n, vmin, vmax, sorted = false) {
+  let values = [];
+  for (let i = 0; i < n; i++) {
+    values.push(random() * (vmax - vmin) + vmin);
   }
-  
-  return (sorted ? sort(values) : values)
+
+  return sorted ? sort(values) : values;
 }
 
-function getRandomPoints(n, xmin, xmax, ymin, ymax, xsorted=false, ysorted=false) {
-  let xvalues = getRandomValues(n, xmin, xmax, xsorted) 
-  let yvalues = getRandomValues(n, ymin, ymax, ysorted)
-  
-  let points = []
-  for(let i = 0; i < n; i++) {
-    let x = xvalues[i]
-    let y = yvalues[i]
-    points.push([x, y])
+function getRandomPoints(
+  n,
+  xmin,
+  xmax,
+  ymin,
+  ymax,
+  xsorted = false,
+  ysorted = false
+) {
+  let xvalues = getRandomValues(n, xmin, xmax, xsorted);
+  let yvalues = getRandomValues(n, ymin, ymax, ysorted);
+
+  let points = [];
+  for (let i = 0; i < n; i++) {
+    let x = xvalues[i];
+    let y = yvalues[i];
+    points.push([x, y]);
   }
-  return points
+  return points;
 }
 
 function getCirclePoints(radius, res) {
-  let points = []
-  for(let i = 0; i < res; i++) {
-    let angle = map(i, 0, res-1, 0, TWO_PI)
-    let x = cos(angle) * radius
-    let y = sin(angle) * radius
-    points.push([x, y])
+  let points = [];
+  for (let i = 0; i < res; i++) {
+    let angle = map(i, 0, res - 1, 0, TWO_PI);
+    let x = cos(angle) * radius;
+    let y = sin(angle) * radius;
+    points.push([x, y]);
   }
-  
+
   // add first point again  - this looks weird
-  let angle = 0
-  let x = cos(angle) * radius
-  let y = sin(angle) * radius
-  points.push([x, y])
-  
-  return points
+  let angle = 0;
+  let x = cos(angle) * radius;
+  let y = sin(angle) * radius;
+  points.push([x, y]);
+
+  return points;
 }
 
 function getRectPoints(width, height, res) {
-  
-  let points = []
-  let radius = sqrt(pow(width, 2) + pow(height, 2))
-  
+  let points = [];
+  let radius = sqrt(pow(width, 2) + pow(height, 2));
+
   // return getCirclePoints(radius, 5)
-  
-  for(let i = 0; i < 5; i++) {
-    let angle = map(i, 0, 4, 0, TWO_PI)
-    let x = cos(angle+PI/4) * radius
-    let y = sin(angle+PI/4) * radius
-    
+
+  for (let i = 0; i < 5; i++) {
+    let angle = map(i, 0, 4, 0, TWO_PI);
+    let x = cos(angle + PI / 4) * radius;
+    let y = sin(angle + PI / 4) * radius;
+
     // push()
     // translate(400, 400)
     // fill('green')
     // circle(x, y, 20)
     // pop()
 
-    points.push([x, y])
+    points.push([x, y]);
   }
-  
-  // add first point again  
-  let angle = PI/4
-  let roff = 0
-  let x = cos(angle) * (radius+roff)
-  let y = sin(angle) * (radius+roff)
-  
+
+  // add first point again
+  let angle = PI / 4;
+  let roff = 0;
+  let x = cos(angle) * (radius + roff);
+  let y = sin(angle) * (radius + roff);
+
   // push()
   // translate(400, 400)
   //   fill('green')
   //   circle(x, y, 20)
   //   pop()
-  points.push([x, y])
-  return points
-  
+  points.push([x, y]);
+  return points;
 }
 
 function getTrianglePoints(radius, res) {
-  return getCirclePoints(radius, 4)
+  return getCirclePoints(radius, 4);
 }
+
+window.getRandomValues = getRandomValues;
+window.getRandomPoints = getRandomPoints;
+window.getCirclePoints = getCirclePoints;
+window.getRectPoints = getRectPoints;
+window.getTrianglePoints = getTrianglePoints;
 
 
 function smoothContinuous(points, options) {
@@ -700,7 +714,7 @@ function drawBezierPath(points, strokeColor) {
   endShape();
 }
 
-function drawBezierLine(points, res=4, swidth=30) {
+function drawBezierLine(points, res = 4, swidth = 30) {
   if (points.length < 2) return;
   // console.log(swidth)
 
@@ -727,41 +741,40 @@ function drawBezierLine(points, res=4, swidth=30) {
     // stroke(strokeColor);
     // noFill();
     // bezierVertex(cp1[0], cp1[1], cp2[0], cp2[1], p2[0], p2[1]);
-    
-    
-    let np = res
-    let bwidth = swidth
-    for(let i = 0; i < np; i++) {
-      let t = i/np
+
+    let np = res;
+    let bwidth = swidth;
+    for (let i = 0; i < np; i++) {
+      let t = i / np;
       let x = bezierPoint(p1[0], cp1[0], cp2[0], p2[0], t);
       let y = bezierPoint(p1[1], cp1[1], cp2[1], p2[1], t);
       let btx = bezierTangent(p1[0], cp1[0], cp2[0], p2[0], t);
       let bty = bezierTangent(p1[0], cp1[0], cp2[0], p2[0], t);
-      let m = noise(btx*0.01, bty*0.01, t)*bwidth
-      let dir = createVector(btx, bty).rotate(radians(90)).normalize().mult(m)
-      dir = dir.normalize()
-      
-      let nx = x/width 
-      let ny = y/height
-      
+      let m = noise(btx * 0.01, bty * 0.01, t) * bwidth;
+      let dir = createVector(btx, bty).rotate(radians(90)).normalize().mult(m);
+      dir = dir.normalize();
+
+      let nx = x / width;
+      let ny = y / height;
+
       // noStroke()
-      noFill()
+      noFill();
       // strokeWeight(2)
       // fill(255, 0, 0, dir.x)// * (m-dir.y))
       // noStroke()
       // stroke(255, 0, 0, m)
       // circle(x, y, 10)
-      stroke('black')
-      fill('black')
+      stroke("black");
+      fill("black");
       // line(x - dir.x, y - dir.y, x + dir.x, y + dir.y)
-      
+
       // fill(255, 0, 0, dir.x*m/2)
       // stroke(255, 0, 0, m-dir.x*m/2)
-      vertex(nx - dir.x, ny - dir.y)
-      
+      vertex(nx - dir.x, ny - dir.y);
+
       // stroke(255, 0, 0, dir.y*m/2)
       // fill(255, 0, 0, dir.y*m/2)
-      vertex(nx + dir.x, ny + dir.y)
+      vertex(nx + dir.x, ny + dir.y);
     }
   }
   endShape();
@@ -772,21 +785,21 @@ function drawBezierLine(points, res=4, swidth=30) {
 //   if (str && str.length > 0 && curvePoints && curvePoints.length >= 4) {
 //     let glyphPositions = [];
 //     let curveLength = 0;
-    
+
 //     // Calculate the approximate total length of the curve by summing segments
 //     let resolution = 100; // Increase resolution for more accuracy
 //     for (let i = 0; i < resolution; i++) {
 //       let t1 = i / resolution;
 //       let t2 = (i + 1) / resolution;
-      
+
 //       let x1 = curvePoint(curvePoints[0].x, curvePoints[1].x, curvePoints[2].x, curvePoints[3].x, t1);
 //       let y1 = curvePoint(curvePoints[0].y, curvePoints[1].y, curvePoints[2].y, curvePoints[3].y, t1);
 //       let x2 = curvePoint(curvePoints[0].x, curvePoints[1].x, curvePoints[2].x, curvePoints[3].x, t2);
 //       let y2 = curvePoint(curvePoints[0].y, curvePoints[1].y, curvePoints[2].y, curvePoints[3].y, t2);
-      
+
 //       curveLength += dist(x1, y1, x2, y2);
 //     }
-    
+
 //     // For each glyph, calculate its position on the curve
 //     let xOffsets = [0];
 //     textSize(style.fontSize || 18);
@@ -831,7 +844,7 @@ function createAlignedText(str, controlPoints, style) {
   if (str && str.length > 0 && controlPoints) {
     let glyphPositions = [];
     let curveLength = 0;
-    
+
     // Calculate the total length of the curve by sampling it
     let resolution = 200; // Higher resolution gives more accurate length
     for (let i = 0; i < resolution; i++) {
@@ -844,7 +857,6 @@ function createAlignedText(str, controlPoints, style) {
       curveLength += dist(pos1.x, pos1.y, pos2.x, pos2.y);
     }
 
-    
     // For each glyph, calculate its position on the curve
     let xOffsets = [0];
     textSize(style.fontSize || 18);
@@ -854,12 +866,11 @@ function createAlignedText(str, controlPoints, style) {
       xOffsets[i] = xOffsets[i - 1] + (prevCharWidth + charWidth) / 2;
     }
 
-
     // Draw each character along the curve
     for (let i = 0; i < str.length; i++) {
       let centerOffs = xOffsets[i];
       if (centerOffs > curveLength) break; // Stop if the offset exceeds the curve length
-      console.log("here")
+      console.log("here");
 
       let t = map(centerOffs, 0, curveLength, 0, 1);
       let pos = getBezierPoint(controlPoints, t);
@@ -870,7 +881,7 @@ function createAlignedText(str, controlPoints, style) {
 
       // Draw the character at the calculated position, rotated along the tangent
       push();
-      translate(width/2, height/2);
+      translate(width / 2, height / 2);
       // rotate(angle);
       text(str.charAt(i), 0, 0);
       pop();
@@ -897,7 +908,8 @@ function getBezierTangent(controlPoints, t) {
   let y = 0;
   let n = controlPoints.length - 1;
   for (let i = 0; i <= n - 1; i++) {
-    let coeff = binomialCoefficient(n - 1, i) * pow(1 - t, n - 1 - i) * pow(t, i);
+    let coeff =
+      binomialCoefficient(n - 1, i) * pow(1 - t, n - 1 - i) * pow(t, i);
     let dx = controlPoints[i + 1].x - controlPoints[i].x;
     let dy = controlPoints[i + 1].y - controlPoints[i].y;
     x += coeff * dx;
@@ -916,6 +928,15 @@ function binomialCoefficient(n, k) {
   }
   return res;
 }
+
+window.smoothContinuous = smoothContinuous;
+window.drawBezierPath = drawBezierPath;
+window.drawBezierLine = drawBezierLine;
+window.createAlignedText = createAlignedText;
+window.getBezierPoint = getBezierPoint;
+window.getBezierTangent = getBezierTangent;
+window.binomialCoefficient = binomialCoefficient;
+
 
 class SpatialGrid {
   constructor(canv_wid, canv_hei, cellSize) {
@@ -958,19 +979,21 @@ class SpatialGrid {
     let neighbors = this.getNeighbors(point);
     // console.log(neighbors)
 
-    if (point.x > (width-this.cellSize) || point.x < (0+this.cellSize) || point.y < (0+this.cellSize) || point.y > (height-this.cellSize)) {
+    if (
+      point.x > width - this.cellSize ||
+      point.x < 0 + this.cellSize ||
+      point.y < 0 + this.cellSize ||
+      point.y > height - this.cellSize
+    ) {
       return false;
     }
     for (let neighbor of neighbors) {
-
       if (point.isTooClose(neighbor)) {
-        console.log("too close")
+        console.log("too close");
         // Don't add the point if it's too close to any neighbor
         return false;
       }
-      
     }
-    
 
     this.cells[col][row].push(point);
 
@@ -1012,7 +1035,6 @@ class SpatialGrid {
   //   return false; // No neighbors are too close
   // }
 
-
   // Get neighbors of a point within its grid cell and surrounding cells
   getNeighbors(point) {
     let top_left = [
@@ -1041,26 +1063,31 @@ class SpatialGrid {
 
   findMostEmptyCell() {
     let cellsWithCoords = [];
-  
+
     // Collect all cells with their corresponding coordinates
     for (let i = 0; i < this.numCols; i++) {
       for (let j = 0; j < this.numRows; j++) {
         cellsWithCoords.push({
-          coords: { x: i * this.cellSize + this.cellSize/2, y: j * this.cellSize + this.cellSize/2},
-          pointsCount: this.cells[i][j].length
+          coords: {
+            x: i * this.cellSize + this.cellSize / 2,
+            y: j * this.cellSize + this.cellSize / 2,
+          },
+          pointsCount: this.cells[i][j].length,
         });
       }
     }
-  
+
     // Sort cells based on the number of children (points) in each cell
     cellsWithCoords.sort((a, b) => a.pointsCount - b.pointsCount);
-  
+
     // Find the minimum number of children
     const minPoints = cellsWithCoords[0].pointsCount;
-  
+
     // Filter out all cells with the minimum number of points
-    const minCells = cellsWithCoords.filter(cell => cell.pointsCount === minPoints);
-  
+    const minCells = cellsWithCoords.filter(
+      (cell) => cell.pointsCount === minPoints
+    );
+
     // Return a random cell from those with the minimum number of points
     return random(minCells).coords;
   }
@@ -1078,17 +1105,17 @@ class SpatialGrid {
 
   findNeighboringCellsByCrowdiness(point) {
     let neighbors = [];
-  
+
     // Get the column and row of the point's cell
     let col = floor(point.x / this.cellSize);
     let row = floor(point.y / this.cellSize);
-  
+
     // Define the range of neighboring cells (up, down, left, right, and diagonals)
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         let neighborX = col + i;
         let neighborY = row + j;
-  
+
         // Ensure the neighboring cell is within the grid bounds and not the original cell
         if (
           neighborX >= 0 &&
@@ -1098,26 +1125,28 @@ class SpatialGrid {
           !(i === 0 && j === 0) // Skip the original cell
         ) {
           neighbors.push({
-            coords: { x: neighborX * this.cellSize, y: neighborY * this.cellSize },
-            pointsCount: this.cells[neighborX][neighborY].length
+            coords: {
+              x: neighborX * this.cellSize,
+              y: neighborY * this.cellSize,
+            },
+            pointsCount: this.cells[neighborX][neighborY].length,
           });
         }
       }
     }
-  
+
     // Sort neighboring cells by the number of points in ascending order
     neighbors.sort((a, b) => a.pointsCount - b.pointsCount);
 
     // Find the minimum number of children
     const minPoints = neighbors[0].pointsCount;
 
-    let final = neighbors.filter(c => c.pointsCount == minPoints).sort((a, b) => random() - random())
+    let final = neighbors
+      .filter((c) => c.pointsCount == minPoints)
+      .sort((a, b) => random() - random());
 
-  
     return final;
   }
-  
-  
 }
 
 class Point {
@@ -1133,3 +1162,6 @@ class Point {
     return distance < this.radius + otherPoint.radius;
   }
 }
+
+window.SpatialGrid = SpatialGrid;
+window.Point = Point;
