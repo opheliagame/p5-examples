@@ -62,7 +62,46 @@ iframe {
   height: 100%;
 }
 
+#sketch-title-container {
+  display: none;
+  padding: 0 1rem;
+}
+
+#sketch-title-container.show {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* Typography */
 h1 {
   font-size: 1.2rem;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+p {
+  font-size: 0.8rem;
+}
+
+span {
+  font-size: 0.5rem;
+}
+
+@media only screen and (max-width: 480px) {
+  header {
+    padding: 0.5rem 1rem;
+  }
+
+  body {
+    display: block;
+    height: 100%;
+  }
+
+  main {
+    height: 100%;
+  }
 }
