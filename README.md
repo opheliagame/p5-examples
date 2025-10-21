@@ -16,7 +16,7 @@ Use this as `index.html` to start using the custom functions defined in `lib`
     <meta charset="utf-8" />
 
     <!-- LIB -->
-    <script src="https://raw.githubusercontent.com/opheliagame/p5-examples/refs/heads/main/dist/op-cc.js"></script>
+    <script src="https://opheliagame.github.io/p5-examples/dist/op-cc.js"></script>
   </head>
   <body>
     <main></main>
@@ -24,3 +24,16 @@ Use this as `index.html` to start using the custom functions defined in `lib`
   </body>
 </html>
 ```
+
+Or copy this inside `<head>` tag of your existing `index.html` file
+
+```html
+<script src="https://opheliagame.github.io/p5-examples/dist/op-cc.js"></script>
+```
+
+Or duplicate [this sketch](https://editor.p5js.org/opheliagame/sketches/h9Eht-nIK) on p5js editor to get started
+
+sketch link -> https://editor.p5js.org/opheliagame/sketches/h9Eht-nIK
+
+> [!NOTE] > `https://raw.githubusercontent.com/opheliagame/p5-examples/refs/heads/main/dist/op-cc.js` does not work due to wrong CORS headers.
+> Replacing this url with corresponding githack.com url `https://raw.githack.com/opheliagame/p5-examples/main/dist/op-cc.js` also fixes the CORS issue.
