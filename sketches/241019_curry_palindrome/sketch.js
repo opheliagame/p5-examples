@@ -958,8 +958,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   textFbo = createFramebuffer();
   g = createGraphics(width, height, P2D);
-  g1 = createGraphics(180, 48-20, P2D);
-  
+  g1 = createGraphics(180, 48 - 20, P2D);
+
   boxX = padX;
   boxY = padY;
   boxWidth = width - padX * 2;
@@ -982,7 +982,14 @@ function draw() {
   // Adjust the text size to fit within the box
   if (textSizeValues.length == index) {
     // console.log("Here");
-    let val = fitTextToBox(currentPalindrome, boxWidth, boxHeight);
+    let val = fitTextToBox(
+      currentPalindrome,
+      "",
+      boxWidth,
+      boxHeight,
+      fontName,
+      g,
+    );
     textSizeValues.push(val);
     // console.log("Here again");
   }
@@ -999,7 +1006,15 @@ function draw() {
   g.textSize(currentTextSize);
   // g.fill('red')
   // g.circle(0, 0, 100)
-  layoutText(currentDisplayText, boxX, boxY, boxWidth, boxHeight);
+  layoutText(
+    currentDisplayText,
+    currentTextSize,
+    boxX,
+    boxY,
+    boxWidth,
+    boxHeight,
+    g,
+  );
   g.pop();
   // textFbo.end();
 
@@ -1012,15 +1027,15 @@ function draw() {
   sh.setUniform("tex", img);
   sh.setUniform("u_time", t);
 
-  textFbo.begin()
+  textFbo.begin();
   shader(sh);
   rectMode(CENTER);
-  rect(0, 0, width-padX*2, height-padY*2);
-  textFbo.end()
+  rect(0, 0, width - padX * 2, height - padY * 2);
+  textFbo.end();
 
   // drawing the title
   g1.push();
-  g1.background('black')
+  g1.background("black");
   // translate(-width / 2, -height / 2);
   g1.translate(0, fontSize);
   g1.fill("white");
@@ -1029,59 +1044,15 @@ function draw() {
   g1.text(`カレー回文${index}`, 0, 0);
   g1.pop();
 
+  push();
+  scale(1, -1);
+  translate(-width / 2, -height / 2);
 
-  push()
-  scale(1, -1)
-  translate(-width/2, -height/2)
-
-  image(textFbo, 0, 0)
+  image(textFbo, 0, 0);
   // noLoop()
-  pop()
+  pop();
 
-  image(g1, -width/2+padX/3, -height/2+padY/3)
-
-
-}
-
-// Function to calculate appropriate text size to fit within the box using binary search
-function fitTextToBox(textContent, boxWidth, boxHeight) {
-  // g.textFont(font); // Make sure the font is set
-  g.textFont(fontName);
-
-  let minSize = 1;
-  let maxSize = 400; // Set an upper limit for the text size
-  let bestSize = minSize;
-
-  while (minSize <= maxSize) {
-    let midSize = Math.floor((minSize + maxSize) / 2); // Find the midpoint size
-    g.textSize(midSize);
-
-    let lines = breakTextIntoLines(textContent, boxWidth);
-
-    // g.textSize(midSize);
-    // textFont(font);
-    // textSize(midSize);
-    // let v = textAscent() + textDescent();
-    let gv = g.textAscent() + g.textDescent();
-
-    let totalHeight = lines.length * gv;
-
-    // Debugging: Print current text size, total height, and box height
-    // console.log(
-    //   `Testing size: ${midSize}, Ascent + Descent: ${gv}, Total Height: ${totalHeight}, Box Height: ${boxHeight}`
-    // );
-
-    if (totalHeight <= boxHeight) {
-      // If the text fits within the box, try a larger size
-      bestSize = midSize;
-      minSize = midSize + 1;
-    } else {
-      // If the text exceeds the box height, try a smaller size
-      maxSize = midSize - 1;
-    }
-  }
-
-  return bestSize; // Return the largest size that fits
+  image(g1, -width / 2 + padX / 3, -height / 2 + padY / 3);
 }
 
 function draw1() {
@@ -1090,97 +1061,6 @@ function draw1() {
   fill("white");
   textSize(64);
   text(palindromes[1], -width / 2, 0);
-}
-
-
-
-function layoutText(text1, x, y, w, h) {
-  g.textAlign(LEFT, TOP);
-  g.textSize(currentTextSize);
-  // textFont(font)
-  g.push();
-  g.translate(x, y);
-  // fill("yellow");
-  // circle(0, 0, 20);
-  let currw = 0;
-  let currh = -currentTextSize;
-  for (let i = 0; i < text1.length; i++) {
-    let letter = text1[i];
-
-    let metrics = g.textWidth(letter);
-    let nexth = g.textAscent() + g.textDescent();
-
-    if (currw + metrics >= w) {
-      currw = 0;
-
-      currh += nexth;
-    }
-
-    g.push();
-    g.translate(currw, currh);
-    // fill("red");
-    // circle(0, 0, 20);
-    drawText(letter);
-    g.pop();
-
-    currw += metrics;
-    // currh += nexth
-  }
-  g.pop();
-}
-
-// Function to break text into multiple lines based on the width of the bounding box
-function breakTextIntoLines(textContent, boxWidth) {
-  let words = textContent.split("");
-  let lines = [];
-  let currentLine = "";
-
-  // g.textFont(font)
-  // g.test
-  for (let i = 0; i < words.length; i++) {
-    let testLine = currentLine + words[i] + " ";
-    if (g.textWidth(testLine) < boxWidth) {
-      currentLine = testLine;
-    } else {
-      lines.push(currentLine);
-      currentLine = words[i] + " ";
-    }
-  }
-  lines.push(currentLine.trim()); // Push the last line
-  return lines;
-}
-
-function drawText(text1) {
-  g.textSize(currentTextSize);
-
-  let w = g.textWidth(text1);
-  let h = g.textAscent() + g.textDescent();
-  // if(debug) rect(0, 0, w, h);
-  g.fill("white");
-  g.text(text1, 0, currentTextSize);
-}
-
-function drawTextWithPoints(text1) {
-  fill("white");
-  // drawText(text1);
-
-  // randomSeed(random())
-  beginShape();
-  const points = font.textToPoints(text1, 0, currentTextSize, currentTextSize, {
-    sampleFactor: 0.3,
-    simplifyThreshold: 0,
-  });
-  for (let p of points) {
-    let voff = createVector(noise(p.x * 10), noise(p.y * 10));
-    // let voff = createVector(0, 0);
-
-    // circle(p.x+voff.x, p.y+voff.y, 5);
-    stroke("whitesmoke");
-    strokeWeight(2);
-    point(p.x + voff.x, p.y + voff.y);
-    // vertex(p.x + voff.x, p.y + voff.y);
-  }
-  endShape();
 }
 
 function keyPressed() {
