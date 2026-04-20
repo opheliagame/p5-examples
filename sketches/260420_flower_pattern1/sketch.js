@@ -12,7 +12,7 @@ let prevMouseX = 0,
   prevMouseY = 0;
 
 function preload() {
-  flower = loadImage("/assets/simple_drawings/0420 flower bud 1.png");
+  flower = loadImage("0420 flower bud 1.png");
 }
 
 function setup() {
