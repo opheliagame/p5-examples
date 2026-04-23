@@ -11,3 +11,7 @@ function draw() {
   textAlign(CENTER, CENTER);
   text("start sketching", width / 2, height / 2);
 }
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
